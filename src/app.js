@@ -13,7 +13,7 @@ app.post("/signup", async (req, res) => {
         await user.save();
         res.send("User Added successfully");
     } catch (err) {
-        res.status(400).send("Error in adding user");
+        res.status(400).send("Error in adding user" + err);
     }
 });
 
@@ -53,11 +53,11 @@ app.patch('/user', async (req, res) => {
     const data = req.body;   
     console.log(data);
     try {
-        const user = await User.findByIdAndUpdate({_id : userId}, data, {returnDocument : 'after'});
+        const user = await User.findByIdAndUpdate({_id : userId}, data, {runValidators : true});
         console.log(user);
         res.send("User updated successfully");
     } catch (err) {
-        res.status(400).send("Error in updating user");
+        res.status(400).send("Error in updating user" + err);
     }
 });
 
