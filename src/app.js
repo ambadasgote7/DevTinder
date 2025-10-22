@@ -1,65 +1,20 @@
 const express = require("express");
 const connectDB = require("./config/database");
 const app = express();
-const User = require("./models/user");
-
+const cookieParser = require('cookie-parser');
 
 app.use(express.json());
+app.use(cookieParser());
 
-app.post("/signup", async (req, res) => {
-    // Creating a new instance of User model
-    const user = new User(req.body);
-    try {
-        await user.save();
-        res.send("User Added successfully");
-    } catch (err) {
-        res.status(400).send("Error in adding user" + err);
-    }
-});
+const authRouter = require("./routes/auth");
+const profileRouter = require("./routes/profile");
+const requestRouter = require("./routes/request");
+const userRouter = require('./routes/user');
 
-app.get("/user", async (req, res) => {
-    const userEmail = req.body.emailId;
-    try {
-        const user = await User.find({emailId : userEmail});
-        res.send(user);
-    } catch (err) {
-        res.status(400).send("Error in fetching user");
-    }
-});
-
-app.get("/feed", async (req, res) => {
-    try {
-        const users = await User.find({});
-        res.send(users);
-    } catch (err) {
-        res.status(400).send("Error in fetching users");
-    }
-});
-
-// Delete user by ID
-app.delete("/user", async (req, res) => {
-    const userId = req.body.userId;
-    try {
-        const user = await User.findByIdAndDelete({_id : userId});
-        res.send(user);
-    } catch (err) {
-        res.status(400).send("Error in fetching users");
-    }
-});
-
-// Update user 
-app.patch('/user', async (req, res) => {
-    const userId = req.body.userId;
-    const data = req.body;   
-    console.log(data);
-    try {
-        const user = await User.findByIdAndUpdate({_id : userId}, data, {runValidators : true});
-        console.log(user);
-        res.send("User updated successfully");
-    } catch (err) {
-        res.status(400).send("Error in updating user" + err);
-    }
-});
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
+app.use('/', userRouter)
 
 
 
