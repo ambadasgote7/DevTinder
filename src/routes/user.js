@@ -83,21 +83,20 @@ userRouter.get('/feed', userAuth, async (req, res) => {
             hideUsersFromFeed.add(req.toUserId.toString());
         });
 
-        const user = await User.find({
+        const users = await User.find({
             $and : [
                 {_id : {$nin : Array.from(hideUsersFromFeed)}},
                 {_id : {$ne : loggedInUser._id}},
             ],
         }).select(USER_SAFE_DATA).skip(skip).limit(limit);
 
-          res.json({ message : "These are users send connection",  data : user });
+          res.json({ message : "These are users send connection",  data : users });
 
 
     } catch (err) {
         res.status(400).send("Error " + err.message);
     }
 });
-
 
 
 
