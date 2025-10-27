@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
         type : String,
         required : true,
         unique : true,
+        lowercase : true,
         trim : true,
         validate(value) {
             if(!validator.isEmail(value)) {
@@ -41,7 +42,7 @@ const userSchema = new mongoose.Schema({
         type : String,
         enum : {
             values : ["Male", "Female", "Other"],
-            message : `{value} is not valid gender type`
+            message : `{VALUE} is not valid gender type`
         },
         // validate(value) {
         //     if(!.["Male", "Female", "Other"].includes(value)) {

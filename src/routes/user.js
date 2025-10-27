@@ -4,6 +4,7 @@ const userRouter = express.Router();
 const { userAuth } = require('../middlewares/auth');
 const { ConnectionRequest } = require('../models/connectionRequest');
 const User = require('../models/user');
+const mongoose = require('mongoose');
 
 const USER_SAFE_DATA = "firstName lastName photoUrl age gender about skills";
 
@@ -67,35 +68,37 @@ userRouter.get('/feed', userAuth, async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         let limit = parseInt(req.query.limit) || 10;
         limit = limit>50 ? 50 : limit;
-        const skip = (page-1)*limit;
-
-        const connectionRequest = await ConnectionRequest.find({
+        const skip = (page-1) * limit;
+        
+        const connctionRequest = await ConnectionRequest.find({
             $or : [
-                {fromUserId : loggedInUser._id},
-                {toUserId : loggedInUser._id},
+                {fromUserId : loggedInUser._id },
+                {toUserId : loggedInUser._id }
             ],
         }).select("fromUserId toUserId");
 
         const hideUsersFromFeed = new Set();
-        connectionRequest.forEach(req => {
+        connctionRequest.forEach (req => {
             hideUsersFromFeed.add(req.fromUserId.toString());
             hideUsersFromFeed.add(req.toUserId.toString());
         });
 
-        console.log(hideUsersFromFeed);
-
         const user = await User.find({
-           $and : [
-            {_id : { $nin : Array.from(hideUsersFromFeed) } },
-            {_id : {$ne : loggedInUser._id } },
-           ],
+            $and : [
+                {_id : {$nin : Array.from(hideUsersFromFeed)}},
+                {_id : {$ne : loggedInUser._id}},
+            ],
         }).select(USER_SAFE_DATA).skip(skip).limit(limit);
 
-        res.json({ message : "These are users",  data : user });
+          res.json({ message : "These are users send connection",  data : user });
+
 
     } catch (err) {
         res.status(400).send("Error " + err.message);
     }
 });
+
+
+
 
 module.exports = userRouter;
