@@ -40,6 +40,7 @@ DevTinder/
 ├── config/ # Database and environment setup
 └── app.js # Entry point
 
+---
 
 ## ⚙️ Setup Instructions
 
@@ -64,6 +65,7 @@ npm start
 Your API will now be available at:
 http://localhost:7777
 
+---
 
 📡 Available APIs
 
@@ -84,6 +86,7 @@ Connections
 Feed
 /feed?page=1&limit=10 → Fetch suggested developers with pagination
 
+---
 
 💬 Chat System Overview
 Once two developers connect (mutual acceptance), they can chat instantly.
@@ -97,6 +100,7 @@ connect → joinRoom(connectionId)
 sendMessage → broadcast to receiver
 messageSaved → MongoDB persists chat
 
+---
 
 🚀 Future Enhancements
 
@@ -106,6 +110,8 @@ messageSaved → MongoDB persists chat
 - Add message reactions and attachments
 - Introduce chat read receipts and last seen status
 - Deploy via Docker and CI/CD pipeline
+
+---
 
 👨‍💻 Author
 Ambadas Gote
